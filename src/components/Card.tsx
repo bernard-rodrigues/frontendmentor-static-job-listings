@@ -59,10 +59,10 @@ export function Card(props: JobProps){
                             }
                         </div>
                     </div>
-                    <div className="
+                    <h1 className="
                         font-myBold mt-[11px] text-[15.1px] text-veryDarkGrayishCyan
                         lg:text-[22px] lg:mt-0 lg:hover:text-desaturatedDarkCyan lg:hover:cursor-pointer
-                    ">{props.position}</div>
+                    ">{props.position}</h1>
                     <div className="
                         flex flex-row mt-[10px] gap-3
                         [&>p]:text-[15.1px] [&>p]:text-darkGrayishCyan [&>span]:text-darkGrayishCyan

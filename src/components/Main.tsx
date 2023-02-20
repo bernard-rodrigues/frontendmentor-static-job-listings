@@ -49,7 +49,7 @@ export function Main(){
     return(
         <main className="
             flex flex-col items-center gap-10 pb-12
-            lg:gap-[24px]
+            lg:gap-[24px] mb-[calc(121px-48px)]
         ">
             {filterByElementList.length > 0 ? 
                 <div 
