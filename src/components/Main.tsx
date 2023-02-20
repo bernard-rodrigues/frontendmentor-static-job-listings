@@ -1,4 +1,4 @@
-import iconRemove from '../assets/images/icon-remove.svg'
+import iconRemove from '../assets/icon-remove.svg'
 import { useEffect, useState } from "react"
 import { Card } from './Card'
 import { concatenate } from '../utils/concatenate'

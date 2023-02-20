@@ -24,8 +24,8 @@ module.exports = {
         default: "15px"
       },
       backgroundImage: {
-        mobile: "url('/src/assets/images/bg-header-mobile.svg')",
-        desktop: "url('/src/assets/images/bg-header-desktop.svg')",
+        mobile: "url('/src/assets/bg-header-mobile.svg')",
+        desktop: "url('/src/assets/bg-header-desktop.svg')",
       }
     },
   },
