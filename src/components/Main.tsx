@@ -1,5 +1,7 @@
 import iconRemove from '../assets/images/icon-remove.svg'
 import { useEffect, useState } from "react"
+import { Card } from './Card'
+import { concatenate } from '../utils/concatenate'
 
 interface Job{
     company: string,
@@ -13,12 +15,13 @@ interface Job{
     new: boolean,
     position: string,
     postedAt: string,
-    role: string
+    role: string,
+    tools: string[]
 }
 
 export function Main(){
     const [ jobList, setJobList ] = useState<Job[]>([])
-    const [ filterByLanguageList, setFilterByLanguageList ] = useState<string[]>([])
+    const [ filterByElementList, setFilterByElementList ] = useState<string[]>([])
 
     useEffect(() => {
         fetch("/src/data/data.json")
@@ -27,110 +30,90 @@ export function Main(){
     }, [])
     
     function checkFilterList(){
-        if(filterByLanguageList.length > 0){
-            return jobList.filter(job => filterByLanguageList.every(language => job.languages.includes(language)))
+        if(filterByElementList.length > 0){
+            return jobList.filter(job => filterByElementList.every(element => concatenate(job.languages, job.level, job.role, job.tools).includes(element)))
         }
         return jobList
+    }
+
+    function addToFilterByElementList(element: string){
+        if(!filterByElementList.includes(element)){
+            setFilterByElementList(currentElements => [...currentElements, element])
+        }
+    }
+
+    function removeFromFilterByElementList(element: string){
+        setFilterByElementList(filterByElementList.filter(elementInList => elementInList !== element))
     }
 
     return(
         <main className="
             flex flex-col items-center gap-10 pb-12
-            lg:pt-[76px] lg:gap-[24px]
+            lg:gap-[24px]
         ">
-            <div 
-                className="
-                    w-[326px] py-[21px] pl-[21px] pr-[27px] flex justify-between items-center -mt-[37px] rounded shadow-lg
-                    bg-white 
-                "
-            >
-                <div className="flex border">
-                    <span 
-                        className="
-                            h-8 pl-2 pr-3 rounded-l flex items-center 
-                            bg-lightGrayishCyan2 text-desaturatedDarkCyan font-myBold
-                        "
-                    >
-                        Vabjhs
-                    </span>
-                    <span className="bg-desaturatedDarkCyan w-8 h-8 rounded-r flex items-center justify-center"><img src={iconRemove} alt="" /></span>
-
-                </div>
-
-                <span className="font-myBold text-darkGrayishCyan">Clear</span>
-            </div>
-
-            {checkFilterList().map( job => (
+            {filterByElementList.length > 0 ? 
                 <div 
-                    key={job.id} 
                     className="
-                        h-64 w-[326px] px-[25px] relative shadow-xl
-                        bg-white border-l-[5px] border-desaturatedDarkCyan rounded-md
-                        lg:w-[1116px] lg:h-[154px] lg:flex lg:items-center lg:px-[35px]
+                        w-[326px] py-[21px] pl-[21px] pr-[27px] flex justify-between items-center -mt-[37px] rounded shadow-lg
+                        bg-white
+                        lg:w-[1116px] lg:mb-[calc(40px-24px)] lg:-mt[36px] lg:pl-[41px] lg:pr-[40px]
                     "
                 >
-                    <img className="
-                        h-12 w-auto absolute -translate-y-1/2
-                        lg:relative lg:translate-y-0 lg:h-[89px] lg:mr-[24px]
-                    "src={job.logo} alt={job.company + "'s logo"}/>
-                       
-                    <div className="lg:flex lg:justify-between lg:items-center lg:w-full">
-                        <div className="mt-8 lg:mt-0 flex flex-col justify-center">   
-                            <div className="flex flex-row justify-start items-center gap-[25px] lg:gap-[17px]">
-                                <div className="
-                                    text-desaturatedDarkCyan font-myBold translate-y-[2px]
-                                    lg:text-[18px] lg:translate-y-[0px]
-                                ">{job.company}</div>
-                                <div 
+                    <div role="listbox" className="w-full flex flex-wrap gap-[17px] mr-[17px]">
+                        {filterByElementList.map(element => (
+                            <div className="flex" key={element}>
+                                <span 
                                     className="
-                                        flex flex-row gap-2
-                                        [&>div>p]:text-white [&>div>p]:pt-[2px] [&>div>p]:px-2 [&>div]:rounded-full
-                                        [&>div>p]:font-myBold [&>div>p]:text-sm [&>div>p]:translate-y-[1px]
+                                        h-8 pl-2 pr-3 rounded-l flex items-center 
+                                        bg-lightGrayishCyan2 text-desaturatedDarkCyan font-myBold
                                     "
                                 >
-                                    {job.new ? 
-                                        <div className="bg-desaturatedDarkCyan">
-                                            <p>NEW!</p>
-                                        </div>
-                                        : <></>
-                                    }
-                                    {job.featured ? 
-                                        <div className="bg-veryDarkGrayishCyan">
-                                            <p>FEATURED</p>
-                                        </div> 
-                                        : <></>
-                                    }
-                                </div>
+                                    {element}
+                                </span>
+                                <span 
+                                    className="
+                                        bg-desaturatedDarkCyan w-8 h-8 rounded-r flex items-center justify-center 
+                                        lg:hover:cursor-pointer lg:hover:bg-veryDarkGrayishCyan
+                                    "
+                                    onClick={() => removeFromFilterByElementList(element)}
+                                >
+                                    <img src={iconRemove} alt="" />
+                                </span>
                             </div>
-                            <div className="
-                                font-myBold mt-[11px] text-[15.1px]
-                                lg:text-[22px] lg:mt-0
-                            ">{job.position}</div>
-                            <div className="
-                                flex flex-row mt-[10px] gap-3
-                                [&>p]:text-[15.1px] [&>p]:text-darkGrayishCyan [&>span]:text-darkGrayishCyan
-                                lg:mt-0 lg:[&>p]:text-[17px] lg:gap-[18px] lg:translate-y-[2px]
-                            ">
-                                <p>{job.postedAt}</p>
-                                <span>&bull;</span>
-                                <p>{job.contract}</p>
-                                <span>&bull;</span>
-                                <p>{job.location}</p>
-                            </div>
-                        </div>
-
-                        <hr className="border-darkGrayishCyan my-4 lg:hidden"/>
-                        
-                        <div className="flex flex-row flex-wrap lg:items-center gap-4">
-                            {job.languages.map(language => (
-                                <div className="bg-lightGrayishCyan2 px-2 py-1 mb-16 lg:mb-0 rounded" key={language}>
-                                    <span className="text-desaturatedDarkCyan font-myBold">{language}</span>
-                                </div>
-                            ))}
-                        </div>
+                        ))}
                     </div>
-                    
+
+                    <span 
+                        className="
+                            font-myBold text-darkGrayishCyan text-[15.6px] 
+                            lg:hover:text-desaturatedDarkCyan lg:hover:underline lg:hover:cursor-pointer
+                        " 
+                        onClick={() => setFilterByElementList([])}
+                    >
+                        Clear
+                    </span>
                 </div>
+            :
+            <div className="mb-[calc(56px-40px)] lg:mb-[calc(75px-24px)]" />            
+            }
+
+            {checkFilterList().map(job => (
+                <Card 
+                    company={job.company}
+                    contract={job.contract}
+                    featured={job.featured}
+                    languages={job.languages}
+                    level={job.level}
+                    location={job.location}
+                    logo={job.logo}
+                    new={job.new}
+                    position={job.position}
+                    postedAt={job.postedAt}
+                    role={job.role}
+                    tools={job.tools}
+                    key={job.id}
+                    filterFunction={addToFilterByElementList}
+                />
             ))}
         </main>
     )
