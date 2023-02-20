@@ -24,7 +24,7 @@ export function Main(){
     const [ filterByElementList, setFilterByElementList ] = useState<string[]>([])
 
     useEffect(() => {
-        fetch("/src/data/data.json")
+        fetch("/api/data.json")
             .then(response => response.json())
             .then(data => setJobList(data))
     }, [])
